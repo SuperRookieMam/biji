@@ -146,4 +146,4 @@
    6. vim hbase-site.xml<br>
          ![](./img/20.png)  
    7. 启动hbase bin/start-hbase.sh
-   8. 查看是否正常运行
+   8. 查看是否正常运行 #http://10.10.0.56:16010/
