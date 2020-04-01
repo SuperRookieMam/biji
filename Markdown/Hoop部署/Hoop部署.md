@@ -35,13 +35,19 @@
     
  5.  一个 Hadoop HDFS Datanode 有一个同时处理文件的上限. 这个参数叫 xcievers (Hadoop的作者把这个单词拼错了). 在你加载之前，先确认下你有没有配置这个文件conf/hdfs-site.xml里面的xceivers参数，至少要有4096:
    
- 6. 首次运行需要执行  hadoop namenode –format
+ 6. 首次运行需要执行  hadoop namenode -format
  7. hadoop sbin 下启动 ../hadoop/sbin/start-dfs.sh
  8. http://10.10.0.55:9870 &nbsp;&nbsp; hdfs管理界面
  
 ####二、YARN 任务平台
  1. 配置yarn-evn.sh 的java_home<br/>
     ![](./img/8.png)
+    
+    注意如果JDK是1.8以上的 需要在yarn-evn.sh
+    
+        export YARN_RESOURCEMANAGER_OPTS="--add-modules=ALL-SYSTEM"
+        export YARN_NODEMANAGER_OPTS="--add-modules=ALL-SYSTEM"
+    ![](./img/21.png)
  2. 配置 mapred-site.xml<br/>
     ![](./img/9.png)
  3. 配置yarn-site.xml <br/>
@@ -113,7 +119,37 @@
     #通过channel c1将source testSources和sink testSink关联起来
     test.sources.testSources.channels = testChannel
     test.sinks.testSink.channel = testChannel
-  
+  * 启动 nohup ./flume-ng agent -c conf -f ../conf/flume-conf.properties  -n first  -Dflume.root.logger=DEBUG,console &
+        
+        help 打印帮助信息
+        agent 运行一个Flume Agent
+        avro-client 运行一个Avro Flume 客户端
+        version 显示Flume版本。
+        
+        全局选项
+        参数                    描述
+        --conf,-c <conf>       在<conf>目录使用配置文件。指定配置文件放在什么目录
+        --classpath,-C <cp>    追加一个classpath
+        --dryrun,-d            不真正运行Agent，而只是打印命令一些信息。
+        --plugins-path <dirs>  插件目录列表。默认：$FLUME_HOME/plugins.d
+        -Dproperty=value	   设置一个JAVA系统属性值。
+        -Xproperty=value	   设置一个JAVA -X的选项。
+        
+        
+        Agent选项
+        参数                     描述
+        --conf-file,-f <file>   指定配置文件，这个配置文件必须在全局选项的--conf参数定义的目录下。（必填）
+        --name,-n <name>        Agent的名称（必填）
+        --help,-h               帮助
+        
+        Avro客户端选项
+        参数                     描述
+        --rpcProps,-P <file>    连接参数的配置文件。
+        --host,-H <host>        Event所要发送到的Hostname。
+        --port,-p <port>        Avro Source的端口。
+        --dirname <dir>         Avro Source流到达的目录。
+        --filename,-F <file>	Avro Source流到达的文件名。
+        --headerFile,-R <file>	设置一个JAVA -X的选项。
 #### kafaka 安装
   1. wget 下载
   2. 配置server.property<br/>
@@ -134,7 +170,7 @@
             vim  /etc/security/limits.conf<br/>
              ![](./img/18.png) 
         2. 可以把 hadoop 替换成你运行HBase和Hadoop的用户。如果你用两个用户，你就需要配两个。还有配nproc hard 和 soft limits. 
-            
+           
             hadoop soft/hard nproc 32000
         3. vim /etc/pam.d/common-session 加上这一行:
         
