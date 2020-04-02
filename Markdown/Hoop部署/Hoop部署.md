@@ -62,6 +62,7 @@
   ![](./img/12.png)
  5. 配置好的spark 文件加复制到节点机子上
  6. 启动测试spark 是否安装完成 
+ 7. 注意如果需要在yarn 上启动 sbin/start-history-server.sh 否则启动 sbin/start-all.sh
 ####Flume安
   * wget 下载
   * 配置vim flume-env.sh<br/>
