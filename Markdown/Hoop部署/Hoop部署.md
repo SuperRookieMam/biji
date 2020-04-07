@@ -54,15 +54,46 @@
     ![](./img/10.png)
  4. 启动yarn 查看 http://10.10.0.55:8042/node 管理平台是否正常
 ####三、spark 部署
- 1. 下载spark wget +下载地址注意spark 版本严格限制注意和hadoop的版本对应关系
- 2. 解压下载的spark 包
- 3. 配置spark环境参数 复制conf 下 spark-env.sh.template 为 spark-env.sh 配置如下<br/>
-  ![](./img/11.png)
- 4. 配置结点信息 复制conf 下 slaves.template 为 slaves 配置如下<br/>
-  ![](./img/12.png)
- 5. 配置好的spark 文件加复制到节点机子上
- 6. 启动测试spark 是否安装完成 
- 7. 注意如果需要在yarn 上启动 sbin/start-history-server.sh 否则启动 sbin/start-all.sh
+
+ 1. yarn默认情况下，只根据内存调度资源，所以sparkon yarn运行的时候，即使通过--executor-cores指定vcore个数为N，但是在yarn的资源管理页面上看到使用的vcore个数还是1. 相关配置在capacity-scheduler.xml 文件
+    * vim yarn-site.xml<br>
+    ![](./img/23.png)
+    ![](./img/24.png)
+    
+    
+    yarn为每一个container分配的最小的内存：1024
+    yarn.scheduler.minimum-allocation-mb  1024
+    最大可分配的内存为8G:
+    yarn.scheduler.maximum-allocation-mb  8192
+    最小的cores： 1个  默认的就是一个
+    yarn.scheduler.minimum-allocation-vcores 1 
+    最多可分配的cores：32个
+    yarn.scheduler.maximum-allocation-vcores 32 
+    
+   *  vim capacity-scheduler.xml 修改配置如下 <br>
+    ![](./img/22.png)
+   * vim yarn-site.xml 新增如下配置<br> 
+    ![](./img/25.png)<br>
+    如果不配置这两个选项，在spark-on-yarn的client模式下，可能会报错,错误如下：<br>
+    ![](./img/26.png)
+   
+   
+    分析原因：内存不足，导致程序被终止。 
+    yarn.nodemanager.pmem-check-enabled
+    是否启动一个线程检查每个任务正使用的物理内存量，如果任务超出分配值，则直接将其杀掉，默认是true。
+    yarn.nodemanager.vmem-check-enabled
+    是否启动一个线程检查每个任务正使用的虚拟内存量，如果任务超出分配值，则直接将其杀掉，默认是true。
+  2. 下载spark wget +下载地址注意spark 版本严格限制注意和hadoop的版本对应关系
+  3. 解压下载的spark 包
+  4. 配置spark环境参数 复制conf 下 spark-env.sh.template 为 spark-env.sh 配置如下<br/>
+   ![](./img/11.png)<br>
+   再次强调：提交spark任务的地方，就是客户端，所以配置一台机器即可。<br>
+   待HDFS和YARN正常启动后，就可以提交任务到yarn集群中。 
+  5. 配置结点信息 复制conf 下 slaves.template 为 slaves 配置如下<br/>
+   ![](./img/12.png)   
+  6. 配置好的spark 文件加复制到节点机子上
+  7. 启动测试spark 是否安装完成 
+  8. 注意如果需要在yarn 上启动 sbin/start-history-server.sh 否则启动 sbin/start-all.sh
 ####Flume安
   * wget 下载
   * 配置vim flume-env.sh<br/>
@@ -70,7 +101,7 @@
   * 配置 vim flume-conf.properties<br/> 
   ![](./img/16.png)
   
-  
+ 
     #Flume系统中核心的角色是agent，agent本身是一个Java进程，一般运行在日志收集节点。
     #每一个agent相当于一个数据传递员，内部有三个组件：
         Source：采集源，用于跟数据源对接，以获取数据；
@@ -122,7 +153,7 @@
     test.sinks.testSink.channel = testChannel
   * 启动 nohup ./flume-ng agent -c conf -f ../conf/flume-conf.properties  -n first  -Dflume.root.logger=DEBUG,console &
         
-        help 打印帮助信息
+        help 打印帮助信息  
         agent 运行一个Flume Agent
         avro-client 运行一个Avro Flume 客户端
         version 显示Flume版本。
