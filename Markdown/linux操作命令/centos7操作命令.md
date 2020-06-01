@@ -134,3 +134,5 @@ linux 部署服务:
     DefaultInstance=
 * chmod +x xxx.service
 * 如果需要开机自启动 systemctl enable xxx.service 
+
+* 查看开机自动启动列表 systemctl list-unit-files|grep enabled
