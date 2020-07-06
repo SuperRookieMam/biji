@@ -61,4 +61,15 @@
     
       您将设置一个Netflix Eureka服务注册表，然后构建一个客户端，该客户端在注册表中注册自己并使用它解析自己的主机。
     服务注册表非常有用，因为它支持客户端负载平衡，并在不需要DNS的情况下将服务提供者与消费者解耦。
-
+###2.  getAway
+    
+    Spring Cloud Gateway是Spring Cloud大家族的一个新进成员，在Spring Cloud 2.0之后用于取代非官方的Zuul。
+    Getaway基于Spring 5.0与Spring WebFlux开发，采用Reactor响应式设计
+ ![](./img/2.png)
+ 
+ 这是官方文档中提供的图，客户端发起请求到达Gateway，根据HandlerMapping到路由处理
+ 术语
+ * 路由(Route)：路由为一组断言与一组过滤器的集合，他是网关的一个基本组件。
+ * 断言(Predicate)：匹配路由的判断条件，例如Path=/demo，匹配后应用路由。
+ * 过滤器(Filter)：过滤器可以对请求和返回进行修改，比如增加头信息等。
+ * 地址(Uri)：匹配路由后转发的地址。 
