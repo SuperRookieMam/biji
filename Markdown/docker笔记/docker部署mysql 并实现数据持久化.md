@@ -53,23 +53,25 @@
 *  创建 docker-compose.yml
 
 
-    version: '3.8'
+    version: "3"
     services:
-      mysql-db:
+      mysql-yhl:
         # 指定容器的名称
-        container_name: mysql-docker
+        container_name: "mysql-yhl"
         # 指定镜像和版本
-        image: mysql8:yhl
-      ports:
-        -"330l":"3306"
-      environment:
-        MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
-        MYSQL_ROOT_HOST: ${MYSQL_ROOT_HOST}
-      volumes:
-        # 把定义的数据目录挂载到docker
-        -"/usr/local/docker/mysql/data:/var/lib/mysql"
-        # 把定义的数据目录挂载到docker
-        -"/usr/local/docker/mysql/conf/my.cnf:/etc/my.cnf"
+        image: "mysql8:yhl"
+        ports:
+          - "3306:3306"
+    #  environment:
+    #    MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
+    #    MYSQL_ROOT_HOST: ${MYSQL_ROOT_HOST}
+        volumes:
+          # 把定义的数据目录挂载到docker
+          - "/usr/local/docker/mysql/data:/var/lib/mysql"
+          # 把定义的数据目录挂载到docker
+          - "/usr/local/docker/mysql/conf:/etc/mysql/conf.d"
+        #docker 重启后，容器自启动
+        restart: always
     
 
 
